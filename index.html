@@ -69,21 +69,21 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="consolelog">Console Log</button>
+      <button id="consoleerror">Console Error</button>
+      <button id="consolecount">Console Count</button>
+      <button id="warn">Console Warn</button>
+      <button id="assert">Console Assert</button>
+      <button id="clear">Console Clear</button>
+      <button id="dir">Console Dir</button>
+      <button id="dirxml">Console dirxml</button>
+      <button id="groupStart">Console Group Start</button>
+      <button id="groupEnd">Console Group End</button>
+      <button id="table">Console Table</button>
+      <button id="timerStart">Start Timer</button>
+      <button id="timerEnd">End Timer</button>
+      <button id="trance">Console Trace</button>
+      <button id="globalError">Trigger a Global Error</button>
     </section>
   </main>
 
@@ -93,16 +93,141 @@
       e.preventDefault();
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
+      let secondNum;
+      try {
+        secondNum = document.querySelector('#second-num').value;
+      } catch  {
+        console.log("Error with second number - not an integer!");
+        secondNum = 0;
+      } finally {
       let operator = document.querySelector('#operator').value;
+      try {
+        console.log(operator);
+        if (operator == '/') {
+          if (secondNum == 0) {
+            throw new DivideByZeroError();
+          }
+        }
+      } catch (err) {
+        console.log(err.message);
+        secondNum = 1;
+      }
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    let cid = document.getElementById("consolelog");
+    cid.addEventListener("click", function(event) {
+      console.log("Console Log Demo");
+    });
+
+    let error = document.getElementById("consoleerror");
+    error.addEventListener("click", function(event) {
+      console.error("Console Error Demo");
+    });
+
+    let count = document.getElementById("consolecount");
+    count.addEventListener("click", function(event) {
+      console.count();
+    })
+
+    let warn = document.getElementById("warn");
+    warn.addEventListener("click", function(event) {
+      console.warn("Console Warn Demo");
+    });
+
+    let assert = document.getElementById("assert");
+    assert.addEventListener("click", function(event) {
+      console.assert(1 == 2, "Console Assert Demo");
+    });
+
+    let dir = document.getElementById("dir");
+    dir.addEventListener("click", function(event) {
+      console.dir(dir);
+    });
+
+    let dirxml = document.getElementById("dirxml");
+    dirxml.addEventListener("click", function(event) {
+      console.dirxml(dirxml);
+    });
+
+    let groupStart = document.getElementById("groupStart");
+    groupStart.addEventListener("click", function(event) {
+      console.group("console.group");
+    });
+
+    let groupEnd = document.getElementById("groupEnd");
+    groupEnd.addEventListener("click", function(event) {
+      console.groupEnd();
+    });
+
+    let table = document.getElementById("table");
+    table.addEventListener("click", function(event) {
+      console.table([{
+        "name": "Software Engineering",
+        "idnum": 110,
+      }, {
+        "name": "Programming Languages",
+        "idnum": 130,
+      }, {
+        "name": "Advances Software Engineering",
+        "idnum": 112,
+      }]);
+    });
+
+    let timerStart = document.getElementById("timerStart");
+    timerStart.addEventListener("click", function(event) {
+      console.time("Timer Button");
+    });
+
+    let timerEnd = document.getElementById("timerEnd");
+    timerEnd.addEventListener("click", function(event) {
+      console.timeEnd("Timer Button");
+    });
+
+    let trance = document.getElementById("trance");
+    trance.addEventListener("click", function handleBtnClick(event) {
+      deep();
+    });
+
+    function deep() {
+      deeper();
+    }
+
+    function deeper() {
+      deepest();
+    }
+
+    function deepest() {
+      console.trace();
+    }
+
+    let globalError = document.getElementById("globalError");
+    globalError.addEventListener("click", function(event) {
+      throw new Error("Global Error");
+    });
+
+    window.onerror = function(message, url, line, col, error) {
+      console.log("Sorry an error happened my friend");
+      console.log(message);
+    };
+
+  class DivideByZeroError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "Divide By Zero Error!";
+    }
+  }
+
+
+
   </script>
+  <script src="index.js" type:"module"></script>
 </body>
 
 </html>
